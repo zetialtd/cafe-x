@@ -14,11 +14,13 @@ object Cafe {
     case "Steak Sandwich" => 4.5
   }
 
-
   def billFor(items: String*): Bill = {
     val subtotal = items.foldLeft[BigDecimal](0)((total, item) => total + itemPrice(item))
 
-    if (items.contains("Cheese Sandwich") || items.contains("Steak Sandwich")) {
+    if (items.contains("Steak Sandwich")) {
+      val serviceCharge = (subtotal * 0.2).setScale(2, RoundingMode.HALF_EVEN).min(20)
+      return Bill(subtotal, serviceCharge, subtotal + serviceCharge)
+    } else if (items.contains("Cheese Sandwich")) {
       val serviceCharge = (subtotal * 0.1).setScale(2, RoundingMode.HALF_EVEN)
       return Bill(subtotal, serviceCharge, subtotal + serviceCharge)
     }

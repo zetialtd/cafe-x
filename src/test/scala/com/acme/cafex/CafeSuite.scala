@@ -26,10 +26,19 @@ class CafeSuite extends FunSuite {
     assert(billFor("Cola", "Coffee", "Cheese Sandwich", "Steak Sandwich").subTotal == 8)
   }
 
-  test("10% service charge when food ordered") {
+  test("10% service charge when cold food ordered") {
     assert(billFor("Cheese Sandwich") == Bill(2, 0.2, 2.2))
-    assert(billFor("Steak Sandwich") == Bill(4.5, 0.45, 4.95))
     assert(billFor("Cola", "Coffee", "Cheese Sandwich") == Bill(3.5, 0.35, 3.85))
-    assert(billFor("Cola", "Coffee", "Cheese Sandwich", "Steak Sandwich") == Bill(8, 0.8, 8.80))
+  }
+
+  test("20% service charge when hot food ordered") {
+    assert(billFor("Cheese Sandwich") == Bill(2, 0.20, 2.20))
+    assert(billFor("Steak Sandwich") == Bill(4.5, 0.90, 5.40))
+    assert(billFor("Cola", "Coffee", "Cheese Sandwich", "Steak Sandwich") == Bill(8, 1.60, 9.60))
+  }
+
+  test("£20 maximum on service charge when hot food ordered"){
+    val order: List[String] = List.fill(23)("Steak Sandwich")
+    assert(billFor(order:_*) == Bill(103.50, 20.00, 123.50))
   }
 }
